@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Koperasi Pinjaman Luxury Gold</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.3/dist/umd/supabase.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
@@ -20,13 +20,26 @@
   --glass-border:rgba(212,175,55,0.4);
 }
 
+html, body {
+  width: 100%;
+  max-width: 100vw;
+  overflow-x: hidden;
+}
+
+body {
+  background: var(--black);
+  padding: 15px;
+  min-height: 100vh;
+}
+
+/* ===== LOGIN CENTER STABIL ===== */
 body.login-active{
   min-height:100vh;
   display:flex;
   justify-content:center;
   align-items:center;
   background:radial-gradient(circle at top left, #1a1a1a 0%, #050505 100%);
-  padding:20px;
+  padding:15px;
   position:relative;
   overflow:hidden;
 }
@@ -59,9 +72,10 @@ body.login-active::after{
   -webkit-backdrop-filter:blur(30px);
   border:1.5px solid var(--glass-border);
   border-radius:28px;
-  padding:50px 40px;
+  padding:40px 30px;
   width:100%;
   max-width:420px;
+  margin:0 auto;
   box-shadow:0 25px 80px rgba(212,175,55,0.25), inset 0 1px 0 rgba(255,255,255,0.15);
   position:relative;
   z-index:1;
@@ -77,13 +91,13 @@ body.login-active::after{
   font-family:'Playfair Display', serif;
   color:var(--gold-light);
   text-align:center;
-  margin-bottom:40px;
-  font-size:32px;
+  margin-bottom:35px;
+  font-size:30px;
   font-weight:700;
   letter-spacing:3px;
   text-shadow:0 0 25px rgba(255,215,0,0.6);
 }
-.input-group{margin-bottom:24px}
+.input-group{margin-bottom:22px}
 .input-group label{
   display:block;
   color:var(--gold-light);
@@ -95,7 +109,8 @@ body.login-active::after{
 }
 .input-group input{
   width:100%;
-  padding:18px 20px;
+  max-width:100%;
+  padding:16px 18px;
   background:rgba(0,0,0,0.5);
   border:1.5px solid rgba(212,175,55,0.4);
   border-radius:16px;
@@ -103,6 +118,7 @@ body.login-active::after{
   font-size:15px;
   outline:none;
   transition:all 0.4s ease;
+  box-sizing:border-box;
 }
 .input-group input::placeholder{color:rgba(255,215,0,0.4)}
 .input-group input:focus{
@@ -112,34 +128,34 @@ body.login-active::after{
 }
 .btn-login{
   width:100%;
-  padding:18px;
+  padding:17px;
   background:linear-gradient(135deg, var(--gold) 0%, var(--gold-dark) 100%);
   color:var(--black);
   border:none;
   border-radius:16px;
-  font-size:17px;
+  font-size:16px;
   font-weight:700;
   cursor:pointer;
   transition:all 0.4s ease;
-  margin-top:20px;
+  margin-top:18px;
   letter-spacing:1.5px;
   text-transform:uppercase;
   box-shadow:0 10px 30px rgba(212,175,55,0.5);
 }
 .btn-login:hover{
-  transform:translateY(-4px);
+  transform:translateY(-3px);
   box-shadow:0 18px 40px rgba(255,215,0,0.7);
 }
 
-body{background:var(--black);padding:25px}
+/* ===== CONTAINER DASHBOARD ===== */
 .container{
   max-width:1150px;
-  margin:auto;
+  width:100%;
+  margin:0 auto 25px;
   background:var(--dark);
-  padding:40px;
+  padding:30px 25px;
   border-radius:24px;
   box-shadow:0 15px 50px rgba(0,0,0,0.7);
-  margin-bottom:30px;
   border:1.5px solid rgba(212,175,55,0.15);
   position:relative;
 }
@@ -152,9 +168,9 @@ body{background:var(--black);padding:25px}
 }
 h2{
   font-family:'Playfair Display', serif;
-  margin-bottom:30px;
+  margin-bottom:28px;
   color:var(--gold-light);
-  font-size:30px;
+  font-size:28px;
   text-align:center;
   letter-spacing:2px;
   font-weight:700;
@@ -162,7 +178,8 @@ h2{
 }
 input,select,button{
   width:100%;
-  padding:16px;
+  max-width:100%;
+  padding:15px;
   margin:0;
   border:1.5px solid rgba(212,175,55,0.3);
   border-radius:14px;
@@ -170,6 +187,7 @@ input,select,button{
   background:rgba(0,0,0,0.4);
   color:var(--gold-light);
   transition:all 0.4s ease;
+  box-sizing:border-box;
 }
 input:focus,select:focus{
   outline:none;
@@ -183,25 +201,25 @@ button{
   border:none;
   cursor:pointer;
   font-weight:700;
-  margin-top:18px;
+  margin-top:16px;
   letter-spacing:1px;
   text-transform:uppercase;
   box-shadow:0 8px 25px rgba(212,175,55,0.4);
 }
-button:hover{transform:translateY(-3px);box-shadow:0 12px 30px rgba(255,215,0,0.6)}
+button:hover{transform:translateY(-2px);box-shadow:0 12px 30px rgba(255,215,0,0.6)}
 button:disabled{background:#333;cursor:not-allowed;transform:none}
 .btn-logout{
   background:linear-gradient(135deg, #C0392B 0%, #8B0000 100%);
   color:white;
-  margin-top:30px;
+  margin-top:25px;
 }
 .btn-wa{background:linear-gradient(135deg, #25D366 0%, #128C7E 100%);color:white}
 .btn-excel{background:linear-gradient(135deg, #1E3A8A 0%, #1E40AF 100%);color:white}
-.btn-toggle{background:linear-gradient(135deg, #7C3AED 0%, #5B21B6 100%);color:white;margin-top:18px;margin-bottom:18px}
+.btn-toggle{background:linear-gradient(135deg, #7C3AED 0%, #5B21B6 100%);color:white;margin-top:16px;margin-bottom:16px}
 .btn-lunas{
   background:linear-gradient(135deg, #FFD700 0%, #D4AF37 100%);
   color:var(--black);
-  padding:10px 14px;
+  padding:8px 12px;
   font-size:11px;
   width:auto;
   font-weight:700;
@@ -209,11 +227,12 @@ button:disabled{background:#333;cursor:not-allowed;transform:none}
 }
 .hidden{display:none}
 
-/* ===== TABEL GLAMOR ANTI PECAH ===== */
+/* ===== TABEL MOBILE FRIENDLY ===== */
 .table-wrap{
   overflow-x:auto;
-  margin-top:25px;
-  border-radius:16px;
+  -webkit-overflow-scrolling:touch;
+  margin-top:20px;
+  border-radius:14px;
   border:1.5px solid rgba(212,175,55,0.3);
   background:var(--glass);
   backdrop-filter:blur(10px);
@@ -222,13 +241,13 @@ button:disabled{background:#333;cursor:not-allowed;transform:none}
 table{
   width:100%;
   border-collapse:collapse;
-  font-size:15px;
-  min-width:950px;
-  table-layout:fixed;
+  font-size:14px;
+  min-width:700px;
+  table-layout:auto;
 }
 
 th,td{
-  padding:16px 18px;
+  padding:14px 12px;
   border:1px solid rgba(212,175,55,0.15);
   vertical-align:middle;
   white-space:nowrap;
@@ -244,49 +263,48 @@ th{
   font-weight:700;
   letter-spacing:1px;
   text-align:center;
-  font-size:14px;
+  font-size:13px;
   text-transform:uppercase;
 }
 
 td{color:var(--gold-light); font-weight:500}
-td:nth-child(1){text-align:left; width:22%} /* Nama */
-td:nth-child(2){text-align:center; width:17%} /* No WA */
-td:nth-child(3){text-align:right; width:17%} /* Pinjaman */
-td:nth-child(4){text-align:right; width:17%} /* Bayar */
-td:nth-child(5){text-align:center; width:13%} /* Jatuh Tempo */
-td:nth-child(6),td:nth-child(7){text-align:center; width:7%} /* KTP Selfie */
-td:nth-child(8){text-align:center; width:10%} /* Status */
-td:nth-child(9){text-align:center; width:10%} /* Aksi */
+td:nth-child(1){text-align:left; width:18%} /* Nama */
+td:nth-child(2){text-align:center; width:16%} /* No WA */
+td:nth-child(3){text-align:right; width:16%} /* Pinjaman */
+td:nth-child(4){text-align:right; width:16%} /* Bayar */
+td:nth-child(5){text-align:center; width:12%} /* Jatuh Tempo */
+td:nth-child(6),td:nth-child(7){text-align:center; width:6%} /* KTP Selfie */
+td:nth-child(8){text-align:center; width:9%} /* Status */
+td:nth-child(9){text-align:center; width:9%} /* Aksi */
 
 tr:hover td{background:rgba(212,175,55,0.08)}
-/* ==================================== */
 
-.status-lunas{background:linear-gradient(135deg, #FFD700 0%, #D4AF37 100%);color:var(--black);padding:6px 12px;border-radius:8px;font-size:11px;font-weight:700;display:inline-block;letter-spacing:0.5px}
-.status-aktif{background:linear-gradient(135deg, var(--gold) 0%, var(--gold-dark) 100%);color:var(--black);padding:6px 12px;border-radius:8px;font-size:11px;font-weight:700;display:inline-block;letter-spacing:0.5px}
-.status-telat{background:linear-gradient(135deg, #DC2626 0%, #991B1B 100%);color:white;padding:6px 12px;border-radius:8px;font-size:11px;font-weight:700;display:inline-block;letter-spacing:0.5px}
+.status-lunas{background:linear-gradient(135deg, #FFD700 0%, #D4AF37 100%);color:var(--black);padding:5px 10px;border-radius:8px;font-size:11px;font-weight:700;display:inline-block}
+.status-aktif{background:linear-gradient(135deg, var(--gold) 0%, var(--gold-dark) 100%);color:var(--black);padding:5px 10px;border-radius:8px;font-size:11px;font-weight:700;display:inline-block}
+.status-telat{background:linear-gradient(135deg, #DC2626 0%, #991B1B 100%);color:white;padding:5px 10px;border-radius:8px;font-size:11px;font-weight:700;display:inline-block}
 img.ktp{
-  width:85px;
-  height:52px;
+  width:75px;
+  height:48px;
   object-fit:cover;
   border-radius:10px;
   cursor:pointer;
   border:2px solid var(--gold);
   transition:all 0.4s ease;
 }
-img.ktp:hover{transform:scale(1.15);box-shadow:0 0 20px var(--gold)}
-.form-group{margin-bottom:22px}
+img.ktp:hover{transform:scale(1.12);box-shadow:0 0 20px var(--gold)}
+.form-group{margin-bottom:20px}
 .label{
   font-weight:600;
-  margin-bottom:10px;
+  margin-bottom:8px;
   display:block;
   font-size:14px;
   color:var(--gold);
   letter-spacing:0.8px;
 }
-#status{margin-top:18px;font-size:15px;text-align:center;font-weight:600}
+#status{margin-top:16px;font-size:14px;text-align:center;font-weight:600}
 .note{font-size:12px;color:rgba(255,215,0,0.6);margin-top:8px;text-align:center}
-.flex-btn{display:flex;gap:14px;margin-bottom:18px}
-.flex-btn button{flex:1}
+.flex-btn{display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap}
+.flex-btn button{flex:1 1 calc(50% - 5px);min-width:140px}
 .readonly{background:rgba(0,0,0,0.6);color:rgba(255,215,0,0.5);cursor:not-allowed}
 
 #tabelWrapper{
@@ -301,17 +319,35 @@ img.ktp:hover{transform:scale(1.15);box-shadow:0 0 20px var(--gold)}
 #tabelWrapper:not(.hidden){
   max-height: 650px;
   opacity: 1;
-  margin-top: 18px;
+  margin-top: 16px;
   overflow-y: auto;
 }
 
-@media (max-width:768px){
-.login-card{padding:40px 30px}
-.login-card h2{font-size:28px}
-.container{padding:30px 22px}
-.flex-btn{flex-direction:column}
-table{font-size:13px}
-th,td{padding:14px 12px}
+/* ===== MEDIA QUERY HP ===== */
+@media (max-width: 480px) {
+  body {padding: 12px}
+  body.login-active::before,
+  body.login-active::after {
+    width: 300px;
+    height: 300px;
+    filter: blur(60px);
+  }
+ .login-card {padding: 30px 20px}
+ .login-card h2 {font-size: 26px; letter-spacing: 2px}
+ .container {padding: 22px 15px}
+  h2 {font-size: 24px}
+
+  input, select, button {padding: 14px 16px; font-size: 14px}
+
+ .flex-btn button {
+    flex: 1 1 100%;
+    min-width: 100%;
+  }
+
+  table {font-size: 12px; min-width: 650px}
+  th, td {padding: 10px 8px}
+
+  img.ktp {width: 65px; height: 40px}
 </style>
 </head>
 <body class="login-active">
@@ -341,9 +377,9 @@ th,td{padding:14px 12px}
 
     <div class="form-group">
       <label class="label">Tempat, Tanggal Lahir</label>
-      <div style="display:flex;gap:12px">
-        <input type="text" id="tempat" required placeholder="Tempat" style="flex:1">
-        <input type="date" id="tglLahir" required style="flex:1">
+      <div style="display:flex;gap:10px;flex-wrap:wrap">
+        <input type="text" id="tempat" required placeholder="Tempat" style="flex:1;min-width:120px">
+        <input type="date" id="tglLahir" required style="flex:1;min-width:140px">
       </div>
     </div>
 
@@ -609,136 +645,4 @@ function renderTable(){
       statusClass = 'status-lunas';
       statusText = 'Lunas';
     } else if(jatuh < today){
-      statusClass = 'status-telat';
-      statusText = 'Telat';
-    }
-
-    let waTampil = row.no_tlp_whatsapp.replace(/^62/, '0');
-    if(waTampil.length > 4) waTampil = waTampil.slice(0,4) + '-' + waTampil.slice(4);
-    if(waTampil.length > 9) waTampil = waTampil.slice(0,9) + '-' + waTampil.slice(9);
-
-    const btnLunas = row.status!== 'lunas'?
-      `<button class="btn-lunas" onclick="tandaiLunas(${row.id}, '${row.nama_lengkap.replace(/'/g, "\\'")}')">Lunasin</button>`
-      : '-';
-
-    tbody.innerHTML += `
-      <tr>
-        <td title="${row.nama_lengkap}">${row.nama_lengkap}</td>
-        <td title="${waTampil}">${waTampil}</td>
-        <td title="${formatRupiahFull(row.jumlah_pinjaman)}">${formatRupiahFull(row.jumlah_pinjaman)}</td>
-        <td title="${formatRupiahFull(row.jumlah_bayar)}">${formatRupiahFull(row.jumlah_bayar)}</td>
-        <td>${new Date(row.tanggal_jatuh_tempo).toLocaleDateString('id-ID')}</td>
-        <td><img class="ktp" src="${row.foto_ktp_url}" onclick="window.open('${row.foto_ktp_url}', '_blank')"></td>
-        <td><img class="ktp" src="${row.foto_selfie_url}" onclick="window.open('${row.foto_selfie_url}', '_blank')"></td>
-        <td><span class="${statusClass}">${statusText}</span></td>
-        <td>${btnLunas}</td>
-      </tr>
-    `;
-  });
-}
-
-async function tandaiLunas(id, nama){
-  if(!id){
-    alert('Error: ID data kosong. Pastikan tabel sudah pakai id bigint IDENTITY');
-    return;
-  }
-
-  if(!confirm('Yakin tandai LUNAS untuk ' + nama + '?')) return;
-
-  try {
-    const {error} = await supabaseClient.from('pinjaman')
-.update({status: 'lunas'})
-.eq('id', id);
-
-    if(error) {
-      alert('❌ Gagal update: ' + error.message);
-      return;
-    }
-
-    alert('✅ Berhasil! Status ' + nama + ' jadi LUNAS');
-    loadData();
-
-  } catch(err) {
-    alert('❌ Error: ' + err.message);
-  }
-}
-
-function exportExcel(){
-  if(dataPinjaman.length === 0){ alert('Belum ada data'); return; }
-
-  const dataExport = dataPinjaman.map(row => ({
-    'ID': row.id,
-    'Nama Lengkap': row.nama_lengkap,
-    'Tempat Lahir': row.tempat_lahir,
-    'Tanggal Lahir': row.tanggal_lahir,
-    'No WA': row.no_tlp_whatsapp.replace(/^62/, '0'),
-    'Jumlah Pinjaman': row.jumlah_pinjaman,
-    'Bunga 20%': row.bunga,
-    'Jumlah Bayar': row.jumlah_bayar,
-    'Jatuh Tempo': row.tanggal_jatuh_tempo,
-    'Status': row.status,
-    'Link KTP': row.foto_ktp_url,
-    'Link Selfie KTP': row.foto_selfie_url,
-    'Tanggal Input': new Date(row.created_at).toLocaleString('id-ID')
-  }));
-
-  const ws = XLSX.utils.json_to_sheet(dataExport);
-  const wb = XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(wb, ws, 'Data Pinjaman');
-
-  const namaFile = `pinjaman_${new Date().toISOString().split('T')[0]}.xlsx`;
-  XLSX.writeFile(wb, namaFile);
-}
-
-function kirimWAH1(){
-  const besok = new Date();
-  besok.setDate(besok.getDate() + 1);
-  const besokStr = besok.toISOString().split('T')[0];
-
-  const dataBesok = dataPinjaman.filter(row =>
-    row.tanggal_jatuh_tempo === besokStr && row.status === 'aktif'
-  );
-
-  if(dataBesok.length === 0){
-    alert('Tidak ada yg jatuh tempo besok');
-    return;
-  }
-
-  let dibuka = 0;
-  dataBesok.forEach(row => {
-    const pesan = `Halo ${row.nama_lengkap}, reminder: Besok ${new Date(row.tanggal_jatuh_tempo).toLocaleDateString('id-ID')} jatuh tempo pinjaman ${formatRupiahFull(row.jumlah_bayar)}. Terima kasih`;
-
-    const linkWA = `https://wa.me/${row.no_tlp_whatsapp}?text=${encodeURIComponent(pesan)}`;
-    window.open(linkWA, '_blank');
-    dibuka++;
-  });
-
-  alert(`✅ Buka ${dibuka} tab WA. Tinggal pencet "Kirim" manual satu-satu ya ka`);
-}
-
-function toggleTabel(){
-  const wrapper = document.getElementById('tabelWrapper');
-  const btn = document.getElementById('btnToggleTabel');
-
-  wrapper.classList.toggle('hidden');
-
-  if(wrapper.classList.contains('hidden')){
-    btn.innerHTML = '🔽 Tampilkan Data Pinjaman';
-  } else {
-    btn.innerHTML = '🔼 Sembunyikan Data Pinjaman';
-  }
-}
-
-function logout(){
-  currentUser = '';
-  document.getElementById('koperasiPage').classList.add('hidden');
-  document.getElementById('dashboardPage').classList.add('hidden');
-  document.getElementById('loginPage').classList.remove('hidden');
-  document.body.classList.add('login-active');
-  document.getElementById('username').value = '';
-  document.getElementById('password').value = '';
-  document.getElementById('status').innerText = '';
-}
-</script>
-</body>
-</html>
+      statusClass = 'status-telat'
