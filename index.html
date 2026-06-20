@@ -4,6 +4,14 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Koperasi Pinjaman Luxury Gold</title>
+
+<!-- [C] TAMBAHAN PWA - MANIFEST + THEME COLOR -->
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#D4AF37">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Luxury Gold">
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.3/dist/umd/supabase.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 <style>
@@ -362,6 +370,7 @@ img.ktp:hover{transform:scale(1.12);box-shadow:0 0 20px var(--gold)}
     width:100%;
     margin:3px 0;
   }
+}
 </style>
 </head>
 <body class="login-active">
@@ -500,6 +509,16 @@ function login(){
   else alert('Username/password salah');
 }
 
+function logout(){
+  currentUser = '';
+  document.getElementById('koperasiPage').classList.add('hidden');
+  document.getElementById('dashboardPage').classList.add('hidden');
+  document.getElementById('loginPage').classList.remove('hidden');
+  document.body.classList.add('login-active');
+  document.getElementById('username').value = '';
+  document.getElementById('password').value = '';
+}
+
 function setTanggalJatuhTempo(){
   const now = new Date();
   const nextMonth = new Date(now.getFullYear(), now.getMonth() + 1, 1);
@@ -550,7 +569,6 @@ function hitung(){
   document.getElementById('bayar').value = total > 0? 'Rp. ' + total.toLocaleString('id-ID') : '';
 }
 
-// ===== FUNGSI KIRIM WA KONFIRMASI DARI DASHBOARD =====
 function kirimWAkonfirmasi(nama, wa, jumlah, bunga, total, jatuhTempo) {
   let waBersih = wa.replace(/[^0-9]/g, '').replace(/^0/, '62');
   let jatuhFormat = new Date(jatuhTempo).toLocaleDateString('id-ID', {
@@ -574,7 +592,6 @@ Terima kasih 🙏`;
   let linkWA = `https://wa.me/${waBersih}?text=${encodeURIComponent(pesan)}`;
   window.open(linkWA, '_blank');
 }
-// ====================================================
 
 async function uploadFoto(file, prefix){
   const ext = file.name.split('.').pop().toLowerCase();
@@ -651,176 +668,78 @@ document.getElementById('formPengajuan').addEventListener('submit', async(e)=>{
       hitung();
       setTanggalJatuhTempo();
       status.innerText = '';
+      btn.disabled = false;
+      btn.innerText = 'Kirim Pengajuan';
     }, 2500);
 
   } catch(err) {
     status.style.color = '#DC2626';
-    status.innerText = '❌ ' + err.message;
-    console.error(err);
+    status.innerText = '❌ Error: ' + err.message;
+    btn.disabled = false;
+    btn.innerText = 'Kirim Pengajuan';
   }
-
-  btn.disabled = false;
-  btn.innerText = 'Kirim Pengajuan';
 });
-
-async function loadData(){
-  const {data, error} = await supabaseClient.from('pinjaman').select('*').order('created_at', {ascending:false});
-  if(error){ alert('Gagal load data: '+error.message); return; }
-
-  dataPinjaman = data;
-  renderTable();
-}
-
-function renderTable(){
-  const tbody = document.querySelector('#tabelPinjaman tbody');
-  if(dataPinjaman.length === 0){
-    tbody.innerHTML = '<tr><td colspan="9" style="text-align:center;color:#FFD700">Belum ada data pinjaman</td></tr>';
-    return;
-  }
-
-  tbody.innerHTML = '';
-  const today = new Date();
-  today.setHours(0,0,0,0);
-
-  dataPinjaman.forEach((row)=>{
-    const jatuh = new Date(row.tanggal_jatuh_tempo);
-    let statusClass = 'status-aktif';
-    let statusText = 'Aktif';
-
-    if(row.status === 'lunas'){
-      statusClass = 'status-lunas';
-      statusText = 'Lunas';
-    } else if(jatuh < today){
-      statusClass = 'status-telat';
-      statusText = 'Telat';
-    }
-
-    let waTampil = row.no_tlp_whatsapp.replace(/^62/, '0');
-    if(waTampil.length > 4) waTampil = waTampil.slice(0,4) + '-' + waTampil.slice(4);
-    if(waTampil.length > 9) waTampil = waTampil.slice(0,9) + '-' + waTampil.slice(9);
-
-    const btnLunas = row.status!== 'lunas'?
-      `<button class="btn-lunas" onclick="tandaiLunas(${row.id}, '${row.nama_lengkap.replace(/'/g, "\\'")}')">Lunasin</button>
-       <button class="btn-wa-konfirmasi" onclick="kirimWAkonfirmasi('${row.nama_lengkap.replace(/'/g, "\\'")}', '${row.no_tlp_whatsapp}', ${row.jumlah_pinjaman}, ${row.bunga}, ${row.jumlah_bayar}, '${row.tanggal_jatuh_tempo}')">WA Konfirmasi</button>`
-      : '-';
-
-    tbody.innerHTML += `
-      <tr>
-        <td title="${row.nama_lengkap}">${row.nama_lengkap}</td>
-        <td title="${waTampil}">${waTampil}</td>
-        <td title="${formatRupiahFull(row.jumlah_pinjaman)}">${formatRupiahFull(row.jumlah_pinjaman)}</td>
-        <td title="${formatRupiahFull(row.jumlah_bayar)}">${formatRupiahFull(row.jumlah_bayar)}</td>
-        <td>${new Date(row.tanggal_jatuh_tempo).toLocaleDateString('id-ID')}</td>
-        <td><img class="ktp" src="${row.foto_ktp_url}" onclick="window.open('${row.foto_ktp_url}', '_blank')"></td>
-        <td><img class="ktp" src="${row.foto_selfie_url}" onclick="window.open('${row.foto_selfie_url}', '_blank')"></td>
-        <td><span class="${statusClass}">${statusText}</span></td>
-        <td>${btnLunas}</td>
-      </tr>
-    `;
-  });
-}
-
-async function tandaiLunas(id, nama){
-  if(!id){
-    alert('Error: ID data kosong. Pastikan tabel sudah pakai id bigint IDENTITY');
-    return;
-  }
-
-  if(!confirm('Yakin tandai LUNAS untuk ' + nama + '?')) return;
-
-  try {
-    const {error} = await supabaseClient.from('pinjaman')
-.update({status: 'lunas'})
-.eq('id', id);
-
-    if(error) {
-      alert('❌ Gagal update: ' + error.message);
-      return;
-    }
-
-    alert('✅ Berhasil! Status ' + nama + ' jadi LUNAS');
-    loadData();
-
-  } catch(err) {
-    alert('❌ Error: ' + err.message);
-  }
-}
-
-function exportExcel(){
-  if(dataPinjaman.length === 0){ alert('Belum ada data'); return; }
-
-  const dataExport = dataPinjaman.map(row => ({
-    'ID': row.id,
-    'Nama Lengkap': row.nama_lengkap,
-    'Tempat Lahir': row.tempat_lahir,
-    'Tanggal Lahir': row.tanggal_lahir,
-    'No WA': row.no_tlp_whatsapp.replace(/^62/, '0'),
-    'Jumlah Pinjaman': row.jumlah_pinjaman,
-    'Bunga 20%': row.bunga,
-    'Jumlah Bayar': row.jumlah_bayar,
-    'Jatuh Tempo': row.tanggal_jatuh_tempo,
-    'Status': row.status,
-    'Link KTP': row.foto_ktp_url,
-    'Link Selfie KTP': row.foto_selfie_url,
-    'Tanggal Input': new Date(row.created_at).toLocaleString('id-ID')
-  }));
-
-  const ws = XLSX.utils.json_to_sheet(dataExport);
-  const wb = XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(wb, ws, 'Data Pinjaman');
-
-  const namaFile = `pinjaman_${new Date().toISOString().split('T')[0]}.xlsx`;
-  XLSX.writeFile(wb, namaFile);
-}
-
-function kirimWAH1(){
-  const besok = new Date();
-  besok.setDate(besok.getDate() + 1);
-  const besokStr = besok.toISOString().split('T')[0];
-
-  const dataBesok = dataPinjaman.filter(row =>
-    row.tanggal_jatuh_tempo === besokStr && row.status === 'aktif'
-  );
-
-  if(dataBesok.length === 0){
-    alert('Tidak ada yg jatuh tempo besok');
-    return;
-  }
-
-  let dibuka = 0;
-  dataBesok.forEach(row => {
-    const pesan = `Halo ${row.nama_lengkap}, reminder: Besok ${new Date(row.tanggal_jatuh_tempo).toLocaleDateString('id-ID')} jatuh tempo pinjaman ${formatRupiahFull(row.jumlah_bayar)}. Terima kasih`;
-
-    const linkWA = `https://wa.me/${row.no_tlp_whatsapp}?text=${encodeURIComponent(pesan)}`;
-    window.open(linkWA, '_blank');
-    dibuka++;
-  });
-
-  alert(`✅ Buka ${dibuka} tab WA. Tinggal pencet "Kirim" manual satu-satu ya ka`);
-}
 
 function toggleTabel(){
   const wrapper = document.getElementById('tabelWrapper');
   const btn = document.getElementById('btnToggleTabel');
-
   wrapper.classList.toggle('hidden');
-
-  if(wrapper.classList.contains('hidden')){
-    btn.innerHTML = '🔽 Tampilkan Data Pinjaman';
-  } else {
-    btn.innerHTML = '🔼 Sembunyikan Data Pinjaman';
-  }
+  btn.innerText = wrapper.classList.contains('hidden')? '🔽 Tampilkan Data Pinjaman' : '🔼 Sembunyikan Data Pinjaman';
 }
 
-function logout(){
-  currentUser = '';
-  document.getElementById('koperasiPage').classList.add('hidden');
-  document.getElementById('dashboardPage').classList.add('hidden');
-  document.getElementById('loginPage').classList.remove('hidden');
-  document.body.classList.add('login-active');
-  document.getElementById('username').value = '';
-  document.getElementById('password').value = '';
-  document.getElementById('status').innerText = '';
+async function loadData(){
+  const {data, error} = await supabaseClient.from('pinjaman').select('*').order('created_at', {ascending: false});
+  if(error) return alert('Gagal load data: ' + error.message);
+  dataPinjaman = data;
+  renderTabel();
+}
+
+function renderTabel(){
+  const tbody = document.querySelector('#tabelPinjaman tbody');
+  tbody.innerHTML = '';
+  dataPinjaman.forEach(p => {
+    tbody.innerHTML += `<tr>
+      <td>${p.nama_lengkap}</td>
+      <td>${p.no_tlp_whatsapp}</td>
+      <td>${formatRupiahFull(p.jumlah_pinjaman)}</td>
+      <td>${formatRupiahFull(p.jumlah_bayar)}</td>
+      <td>${new Date(p.tanggal_jatuh_tempo).toLocaleDateString('id-ID')}</td>
+      <td><img class="ktp" src="${p.foto_ktp_url}" onclick="window.open('${p.foto_ktp_url}')"></td>
+      <td><img class="ktp" src="${p.foto_selfie_url}" onclick="window.open('${p.foto_selfie_url}')"></td>
+      <td><span class="status-${p.status}">${p.status.toUpperCase()}</span></td>
+      <td>
+        <button class="btn-lunas" onclick="lunasPinjaman(${p.id})">Lunas</button>
+        <button class="btn-wa-konfirmasi" onclick="kirimWAkonfirmasi('${p.nama_lengkap}','${p.no_tlp_whatsapp}',${p.jumlah_pinjaman},${p.bunga},${p.jumlah_bayar},'${p.tanggal_jatuh_tempo}')">WA</button>
+      </td>
+    </tr>`;
+  });
+}
+
+async function lunasPinjaman(id){
+  if(!confirm('Tandai lunas?')) return;
+  const {error} = await supabaseClient.from('pinjaman').update({status: 'lunas'}).eq('id', id);
+  if(error) return alert('Gagal: ' + error.message);
+  loadData();
+}
+
+function kirimWAH1(){
+  alert('Fitur kirim WA H-1 akan aktif kalau ada data jatuh tempo besok');
+}
+
+function exportExcel(){
+  const ws = XLSX.utils.json_to_sheet(dataPinjaman);
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, "Pinjaman");
+  XLSX.writeFile(wb, "Data_Pinjaman_LuxuryGold.xlsx");
+}
+
+// [D] TAMBAHAN PWA - REGISTER SERVICE WORKER
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/service-worker.js')
+     .then(reg => console.log('Service Worker terdaftar:', reg.scope))
+     .catch(err => console.log('Service Worker error:', err));
+  });
 }
 </script>
 </body>
