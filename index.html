@@ -32,7 +32,6 @@ body {
   min-height: 100vh;
 }
 
-/* ===== LOGIN CENTER STABIL ===== */
 body.login-active{
   min-height:100vh;
   display:flex;
@@ -147,7 +146,6 @@ body.login-active::after{
   box-shadow:0 18px 40px rgba(255,215,0,0.7);
 }
 
-/* ===== CONTAINER DASHBOARD ===== */
 .container{
   max-width:1150px;
   width:100%;
@@ -224,10 +222,19 @@ button:disabled{background:#333;cursor:not-allowed;transform:none}
   width:auto;
   font-weight:700;
   border-radius:8px;
+  margin-right:5px;
+}
+.btn-wa-konfirmasi{
+  background:linear-gradient(135deg, #25D366 0%, #128C7E 100%);
+  color:white;
+  padding:8px 12px;
+  font-size:11px;
+  width:auto;
+  font-weight:700;
+  border-radius:8px;
 }
 .hidden{display:none}
 
-/* ===== TABEL MOBILE FRIENDLY ===== */
 .table-wrap{
   overflow-x:auto;
   -webkit-overflow-scrolling:touch;
@@ -242,7 +249,7 @@ table{
   width:100%;
   border-collapse:collapse;
   font-size:14px;
-  min-width:700px;
+  min-width:800px;
   table-layout:auto;
 }
 
@@ -268,14 +275,14 @@ th{
 }
 
 td{color:var(--gold-light); font-weight:500}
-td:nth-child(1){text-align:left; width:18%} /* Nama */
-td:nth-child(2){text-align:center; width:16%} /* No WA */
-td:nth-child(3){text-align:right; width:16%} /* Pinjaman */
-td:nth-child(4){text-align:right; width:16%} /* Bayar */
-td:nth-child(5){text-align:center; width:12%} /* Jatuh Tempo */
-td:nth-child(6),td:nth-child(7){text-align:center; width:6%} /* KTP Selfie */
-td:nth-child(8){text-align:center; width:9%} /* Status */
-td:nth-child(9){text-align:center; width:9%} /* Aksi */
+td:nth-child(1){text-align:left; width:16%}
+td:nth-child(2){text-align:center; width:14%}
+td:nth-child(3){text-align:right; width:14%}
+td:nth-child(4){text-align:right; width:14%}
+td:nth-child(5){text-align:center; width:11%}
+td:nth-child(6),td:nth-child(7){text-align:center; width:6%}
+td:nth-child(8){text-align:center; width:8%}
+td:nth-child(9){text-align:center; width:17%}
 
 tr:hover td{background:rgba(212,175,55,0.08)}
 
@@ -323,7 +330,6 @@ img.ktp:hover{transform:scale(1.12);box-shadow:0 0 20px var(--gold)}
   overflow-y: auto;
 }
 
-/* ===== MEDIA QUERY HP ===== */
 @media (max-width: 480px) {
   body {padding: 12px}
   body.login-active::before,
@@ -332,22 +338,30 @@ img.ktp:hover{transform:scale(1.12);box-shadow:0 0 20px var(--gold)}
     height: 300px;
     filter: blur(60px);
   }
- .login-card {padding: 30px 20px}
- .login-card h2 {font-size: 26px; letter-spacing: 2px}
- .container {padding: 22px 15px}
+.login-card {padding: 30px 20px}
+.login-card h2 {font-size: 26px; letter-spacing: 2px}
+.container {padding: 22px 15px}
   h2 {font-size: 24px}
 
   input, select, button {padding: 14px 16px; font-size: 14px}
 
- .flex-btn button {
+.flex-btn button {
     flex: 1 1 100%;
     min-width: 100%;
   }
 
-  table {font-size: 12px; min-width: 650px}
+  table {font-size: 12px; min-width: 750px}
   th, td {padding: 10px 8px}
 
   img.ktp {width: 65px; height: 40px}
+
+.btn-lunas,.btn-wa-konfirmasi {
+    padding:6px 8px;
+    font-size:10px;
+    display:block;
+    width:100%;
+    margin:3px 0;
+  }
 </style>
 </head>
 <body class="login-active">
@@ -536,6 +550,32 @@ function hitung(){
   document.getElementById('bayar').value = total > 0? 'Rp. ' + total.toLocaleString('id-ID') : '';
 }
 
+// ===== FUNGSI KIRIM WA KONFIRMASI DARI DASHBOARD =====
+function kirimWAkonfirmasi(nama, wa, jumlah, bunga, total, jatuhTempo) {
+  let waBersih = wa.replace(/[^0-9]/g, '').replace(/^0/, '62');
+  let jatuhFormat = new Date(jatuhTempo).toLocaleDateString('id-ID', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric'
+  });
+
+  let pesan = `Hallo..👋🏻 ${nama}
+Pengajuan kamu sedang di proses..mohon di tunggu
+
+Detail Pengajuan:
+- Jumlah Pinjaman: ${formatRupiahFull(jumlah)}
+- Tenor: 1 Bulan
+- Bunga 20% Otomatis: ${formatRupiahFull(bunga)}
+- Jumlah Bayar: ${formatRupiahFull(total)}
+- Tanggal Jatuh Tempo: ${jatuhFormat}
+
+Terima kasih 🙏`;
+
+  let linkWA = `https://wa.me/${waBersih}?text=${encodeURIComponent(pesan)}`;
+  window.open(linkWA, '_blank');
+}
+// ====================================================
+
 async function uploadFoto(file, prefix){
   const ext = file.name.split('.').pop().toLowerCase();
   const timestamp = Date.now();
@@ -562,8 +602,13 @@ document.getElementById('formPengajuan').addEventListener('submit', async(e)=>{
   status.innerText = '';
 
   try {
+    const nama = document.getElementById('nama').value.trim();
+    const tempat = document.getElementById('tempat').value.trim();
+    const tglLahir = document.getElementById('tglLahir').value;
+    const waInput = document.getElementById('wa').value;
     const fileKtp = document.getElementById('fotoKtp').files[0];
     const fileSelfie = document.getElementById('fotoSelfie').files[0];
+    const jatuhTempo = document.getElementById('tglJatuh').value;
 
     if(!fileKtp) throw new Error('Pilih foto KTP dulu');
     if(!fileSelfie) throw new Error('Pilih foto selfie pegang KTP dulu');
@@ -578,20 +623,21 @@ document.getElementById('formPengajuan').addEventListener('submit', async(e)=>{
 
     let jmlBersih = parseInt(document.getElementById('jumlah').value.replace(/[^0-9]/g, '')) || 0;
     let bunga = jmlBersih * 0.2;
-    let waBersih = '62' + document.getElementById('wa').value.replace(/[^0-9]/g, '').replace(/^0/, '');
+    let total = jmlBersih + bunga;
+    let waBersih = '62' + waInput.replace(/[^0-9]/g, '').replace(/^0/, '');
 
     status.innerText = '⏳ Simpan data ke database...';
     const {error} = await supabaseClient.from('pinjaman').insert([{
-      nama_lengkap: document.getElementById('nama').value.trim(),
-      tempat_lahir: document.getElementById('tempat').value.trim(),
-      tanggal_lahir: document.getElementById('tglLahir').value,
+      nama_lengkap: nama,
+      tempat_lahir: tempat,
+      tanggal_lahir: tglLahir,
       no_tlp_whatsapp: waBersih,
       foto_ktp_url: fotoKtpUrl,
       foto_selfie_url: fotoSelfieUrl,
       jumlah_pinjaman: jmlBersih,
       bunga: bunga,
-      jumlah_bayar: jmlBersih + bunga,
-      tanggal_jatuh_tempo: document.getElementById('tglJatuh').value,
+      jumlah_bayar: total,
+      tanggal_jatuh_tempo: jatuhTempo,
       status: 'aktif'
     }]);
 
@@ -605,7 +651,7 @@ document.getElementById('formPengajuan').addEventListener('submit', async(e)=>{
       hitung();
       setTanggalJatuhTempo();
       status.innerText = '';
-    }, 2000);
+    }, 2500);
 
   } catch(err) {
     status.style.color = '#DC2626';
@@ -645,4 +691,137 @@ function renderTable(){
       statusClass = 'status-lunas';
       statusText = 'Lunas';
     } else if(jatuh < today){
-      statusClass = 'status-telat'
+      statusClass = 'status-telat';
+      statusText = 'Telat';
+    }
+
+    let waTampil = row.no_tlp_whatsapp.replace(/^62/, '0');
+    if(waTampil.length > 4) waTampil = waTampil.slice(0,4) + '-' + waTampil.slice(4);
+    if(waTampil.length > 9) waTampil = waTampil.slice(0,9) + '-' + waTampil.slice(9);
+
+    const btnLunas = row.status!== 'lunas'?
+      `<button class="btn-lunas" onclick="tandaiLunas(${row.id}, '${row.nama_lengkap.replace(/'/g, "\\'")}')">Lunasin</button>
+       <button class="btn-wa-konfirmasi" onclick="kirimWAkonfirmasi('${row.nama_lengkap.replace(/'/g, "\\'")}', '${row.no_tlp_whatsapp}', ${row.jumlah_pinjaman}, ${row.bunga}, ${row.jumlah_bayar}, '${row.tanggal_jatuh_tempo}')">WA Konfirmasi</button>`
+      : '-';
+
+    tbody.innerHTML += `
+      <tr>
+        <td title="${row.nama_lengkap}">${row.nama_lengkap}</td>
+        <td title="${waTampil}">${waTampil}</td>
+        <td title="${formatRupiahFull(row.jumlah_pinjaman)}">${formatRupiahFull(row.jumlah_pinjaman)}</td>
+        <td title="${formatRupiahFull(row.jumlah_bayar)}">${formatRupiahFull(row.jumlah_bayar)}</td>
+        <td>${new Date(row.tanggal_jatuh_tempo).toLocaleDateString('id-ID')}</td>
+        <td><img class="ktp" src="${row.foto_ktp_url}" onclick="window.open('${row.foto_ktp_url}', '_blank')"></td>
+        <td><img class="ktp" src="${row.foto_selfie_url}" onclick="window.open('${row.foto_selfie_url}', '_blank')"></td>
+        <td><span class="${statusClass}">${statusText}</span></td>
+        <td>${btnLunas}</td>
+      </tr>
+    `;
+  });
+}
+
+async function tandaiLunas(id, nama){
+  if(!id){
+    alert('Error: ID data kosong. Pastikan tabel sudah pakai id bigint IDENTITY');
+    return;
+  }
+
+  if(!confirm('Yakin tandai LUNAS untuk ' + nama + '?')) return;
+
+  try {
+    const {error} = await supabaseClient.from('pinjaman')
+.update({status: 'lunas'})
+.eq('id', id);
+
+    if(error) {
+      alert('❌ Gagal update: ' + error.message);
+      return;
+    }
+
+    alert('✅ Berhasil! Status ' + nama + ' jadi LUNAS');
+    loadData();
+
+  } catch(err) {
+    alert('❌ Error: ' + err.message);
+  }
+}
+
+function exportExcel(){
+  if(dataPinjaman.length === 0){ alert('Belum ada data'); return; }
+
+  const dataExport = dataPinjaman.map(row => ({
+    'ID': row.id,
+    'Nama Lengkap': row.nama_lengkap,
+    'Tempat Lahir': row.tempat_lahir,
+    'Tanggal Lahir': row.tanggal_lahir,
+    'No WA': row.no_tlp_whatsapp.replace(/^62/, '0'),
+    'Jumlah Pinjaman': row.jumlah_pinjaman,
+    'Bunga 20%': row.bunga,
+    'Jumlah Bayar': row.jumlah_bayar,
+    'Jatuh Tempo': row.tanggal_jatuh_tempo,
+    'Status': row.status,
+    'Link KTP': row.foto_ktp_url,
+    'Link Selfie KTP': row.foto_selfie_url,
+    'Tanggal Input': new Date(row.created_at).toLocaleString('id-ID')
+  }));
+
+  const ws = XLSX.utils.json_to_sheet(dataExport);
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, 'Data Pinjaman');
+
+  const namaFile = `pinjaman_${new Date().toISOString().split('T')[0]}.xlsx`;
+  XLSX.writeFile(wb, namaFile);
+}
+
+function kirimWAH1(){
+  const besok = new Date();
+  besok.setDate(besok.getDate() + 1);
+  const besokStr = besok.toISOString().split('T')[0];
+
+  const dataBesok = dataPinjaman.filter(row =>
+    row.tanggal_jatuh_tempo === besokStr && row.status === 'aktif'
+  );
+
+  if(dataBesok.length === 0){
+    alert('Tidak ada yg jatuh tempo besok');
+    return;
+  }
+
+  let dibuka = 0;
+  dataBesok.forEach(row => {
+    const pesan = `Halo ${row.nama_lengkap}, reminder: Besok ${new Date(row.tanggal_jatuh_tempo).toLocaleDateString('id-ID')} jatuh tempo pinjaman ${formatRupiahFull(row.jumlah_bayar)}. Terima kasih`;
+
+    const linkWA = `https://wa.me/${row.no_tlp_whatsapp}?text=${encodeURIComponent(pesan)}`;
+    window.open(linkWA, '_blank');
+    dibuka++;
+  });
+
+  alert(`✅ Buka ${dibuka} tab WA. Tinggal pencet "Kirim" manual satu-satu ya ka`);
+}
+
+function toggleTabel(){
+  const wrapper = document.getElementById('tabelWrapper');
+  const btn = document.getElementById('btnToggleTabel');
+
+  wrapper.classList.toggle('hidden');
+
+  if(wrapper.classList.contains('hidden')){
+    btn.innerHTML = '🔽 Tampilkan Data Pinjaman';
+  } else {
+    btn.innerHTML = '🔼 Sembunyikan Data Pinjaman';
+  }
+}
+
+function logout(){
+  currentUser = '';
+  document.getElementById('koperasiPage').classList.add('hidden');
+  document.getElementById('dashboardPage').classList.add('hidden');
+  document.getElementById('loginPage').classList.remove('hidden');
+  document.body.classList.add('login-active');
+  document.getElementById('username').value = '';
+  document.getElementById('password').value = '';
+  document.getElementById('status').innerText = '';
+}
+</script>
+</body>
+</html>
