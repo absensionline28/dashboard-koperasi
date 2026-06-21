@@ -1,24 +1,12 @@
 {
-  "name": "Koperasi Luxury Gold Pinjaman",
-  "short_name": "Luxury Gold",
-  "description": "Aplikasi pinjaman koperasi cepat, aman, terpercaya",
-  "start_url": "index.html",
+  "name": "Dashboard Koperasi",
+  "short_name": "Koperasi",
+  "start_url": "./index.html",
   "display": "standalone",
-  "background_color": "#1a1a1a",
-  "theme_color": "#D4AF37",
-  "orientation": "portrait",
+  "background_color": "#ffffff",
+  "theme_color": "#000",
   "icons": [
-    {
-      "src": "icon-192.png",
-      "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "any maskable"
-    },
-    {
-      "src": "icon-512.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any maskable"
-    }
+    {"src": "icon-192.png", "sizes": "192x192", "type": "image/png"},
+    {"src": "icon-512.png", "sizes": "512x512", "type": "image/png"}
   ]
 }
