@@ -1,17 +1,14 @@
-const CACHE_NAME = 'koperasi-gold-v2'; // jangan lupa ganti v1 jadi v2 juga ya
+const CACHE_NAME = 'koperasi-gold-v2';
 const urlsToCache = [
   '/',
   '/index.html',
   '/style.css',
   '/script.js',
   '/icon-192.png',
-  '/icon-512.png',
-  '/login.js',
-  '/logo.png',
-  '/fonts/poppins.woff2'
+  '/icon-512.png'
 ];
 
-// Install service worker
+// 1. Install - nyimpen file ke cache
 self.addEventListener('install', event => {
   event.waitUntil(
     caches.open(CACHE_NAME)
@@ -19,7 +16,7 @@ self.addEventListener('install', event => {
   );
 });
 
-// Fetch file dari cache kalau offline
+// 2. Fetch - ngambil file dari cache kalau offline
 self.addEventListener('fetch', event => {
   event.respondWith(
     caches.match(event.request)
@@ -27,7 +24,7 @@ self.addEventListener('fetch', event => {
   );
 });
 
-// Tambahin ini paling bawah buat hapus cache v1 yg rusak
+// 3. ACTIVATE - tempel kode kamu di sini paling bawah
 self.addEventListener('activate', event => {
   event.waitUntil(
     caches.keys().then(keys => {
