@@ -1,7 +1,8 @@
 {
   "name": "Dashboard Koperasi",
   "short_name": "Koperasi",
-  "start_url": "./index.html",
+  "start_url": "./dashboard-koperasi/index.html",
+"scope": "./dashboard-koperasi/"
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#000",
