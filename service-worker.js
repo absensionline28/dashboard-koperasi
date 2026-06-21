@@ -1,4 +1,4 @@
-const CACHE_NAME = 'koperasi-gold-v6';
+const CACHE_NAME = 'koperasi-gold-v7';
 const urlsToCache = [
   './',
   './index.html',
