@@ -92,7 +92,7 @@ img.ktp:hover{transform:scale(1.12);box-shadow:0 0 20px var(--gold)}
 
 <div class="container login-card" id="loginPage">
   <h2>LUXURY ACCESS</h2>
-  <form onsubmit="event.preventDefault(); login()">
+  <form>
     <div class="input-group">
       <label>Username</label>
       <input type="text" id="username" placeholder="Masukkan username" required autocomplete="username">
@@ -101,7 +101,7 @@ img.ktp:hover{transform:scale(1.12);box-shadow:0 0 20px var(--gold)}
       <label>Password</label>
       <input type="password" id="password" placeholder="Masukkan password" required autocomplete="current-password">
     </div>
-    <button type="submit" class="btn-login">Enter Vault</button>
+    <button type="button" onclick="login()" class="btn-login">Enter Vault</button>
   </form>
 </div>
 
