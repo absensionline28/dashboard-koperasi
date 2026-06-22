@@ -1,16 +1,10 @@
 {
   "name": "Koperasi Gold",
   "short_name": "Koperasi",
-  "start_url": "./index.html",
-  "scope": "./",
+  "start_url": "index.html",
+  "scope": "/",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#d4af37",
-  "icons": [
-    {
-      "src": "icon-192.png",
-      "sizes": "192x192",
-      "type": "image/png"
-    }
-  ]
+  "icons": [{"src": "icon-192.png", "sizes": "192x192", "type": "image/png"}]
 }
