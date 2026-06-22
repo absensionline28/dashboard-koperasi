@@ -1,3 +1,7 @@
-self.addEventListener('install', e => e.waitUntil(self.skipWaiting()));
-self.addEventListener('activate', e => e.waitUntil(self.clients.claim()));
-self.addEventListener('fetch', e => e.respondWith(fetch(e.request)));
+self.addEventListener('fetch', event => {
+  event.respondWith(
+    caches.match(event.request).then(resp => {
+      return resp || fetch(event.request).catch(() => caches.match('/index.html'));
+    })
+  );
+});
